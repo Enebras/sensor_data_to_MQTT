@@ -4,15 +4,13 @@
 #include "DHT_ctrl.h"
 #include "PMS_ctrl.h"
 
-const char* ssid = "romeu";  // maintain this pointer to the ssid field from wifi library
-const char* password = "1234567890";
-const char* mqtt_server = "iota.vimacsolucoes.com.br";
-const char* ntpServer = "time.google.com";  // for instance this part is'nt needed
-const char* gmtOffset = "GMT+3";            //this also
-const char* mqttTopic = "enebras/b2549fac-7752-4f05-83d9-5354ca17856a";
-const char* clientID = "b2549fac-7752-4f05-83d9-5354ca17856a";
-const char* username = "enebras";
-const char* passwd = "b2549fac-7752-4f05-83d9-5354ca17856a";
+const char* ssid = "your SSID";  // maintain this pointer to the ssid field from wifi library
+const char* password = "your password";
+const char* mqtt_server = "your MQTT server";
+const char* mqttTopic = "your MQTT topic";
+const char* clientID = "your client ID";
+const char* username = "your username";
+const char* passwd = "your mqtt password";
 
 
 String datetime, mac;  // sets two variables, one for store the datetime from the NTP server and other to store the mac adress
@@ -56,20 +54,20 @@ if(WiFi.status() == WL_CONNECTED){
     unsigned long mqttStartAttemptTime = millis();                            // Separate timer for MQTT connectio attempt
     while (!client.connected() && millis() - mqttStartAttemptTime < 10000) {  // 10-second timeout for MQTT( a loop that makes a 
      //serie of requests to the MQTT server)
-      //Serial.print("Attempting MQTT connection...");
+      Serial.print("Attempting MQTT connection...");
       if (client.connect(clientID, username, passwd)) {//send those credentials if mqtt accepts returns true 
-        //Serial.println("connected to MQTT");
+        Serial.println("connected to MQTT");
         return true;
       } 
       else {
-          // Serial.print("failed, rc=");
-          // Serial.print(client.state());//returns a integer for diagnose why is'nt connecting with the MQTT server
-          // Serial.println(" retrying in 5 seconds");
+           Serial.print("failed, rc=");
+           Serial.print(client.state());//returns a integer for diagnose why is'nt connecting with the MQTT server
+           Serial.println(" retrying in 5 seconds");
         delay(5000);
         
       }
     }
-    //Serial.println("MQTT reconnection failed after timeout.");
+    Serial.println("MQTT reconnection failed after timeout.");
     return false;
   }
   else{
@@ -109,8 +107,8 @@ if(WiFi.status() != WL_CONNECTED){
   }
   if (WiFi.status() == WL_CONNECTED) {//same logic two times 
       Serial.println("WiFi connected");
-    //  Serial.println("IP address: ");
-    //  Serial.println(WiFi.localIP());
+      Serial.println("IP address: ");
+      Serial.println(WiFi.localIP());
     return true;
     // just set the client server and the port to connect
   }
@@ -123,21 +121,21 @@ if(WiFi.status() != WL_CONNECTED){
 bool reconnectWiFi(){//this function will be used before send the data 
 
   if (WiFi.status() != WL_CONNECTED) {//checks if the wifi status is disconected
-    //Serial.print("Reconnecting to WiFi...");
+    Serial.print("Reconnecting to WiFi...");
     WiFi.begin(ssid, password);//try to conect with the wifi, it's a asyncronous loop method that dont stop(
       // the program should run only if the wifi is connected )
 
     unsigned long startAttemptTime = millis();//starts to count the time it's tryng to connect
     while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 10000) { 
       delay(500);
-      //Serial.print(".");
+      Serial.print(".");
     }
 
     if (WiFi.status() == WL_CONNECTED) {// run the code
-     // Serial.println("Reconnected to WiFi!");
+      Serial.println("Reconnected to WiFi!");
       return true;
     } else {
-     // Serial.println("WiFi reconnection failed.");//keep retryng for a period of time and then restart
+      Serial.println("WiFi reconnection failed.");//keep retryng for a period of time and then restart
       return false;  // Skip MQTT reconnection if WiFi fails( returns nothing)
     }
   }

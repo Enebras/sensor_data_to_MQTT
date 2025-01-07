@@ -12,13 +12,13 @@ PMS pms(PMSserial);
 PMS::DATA data;
 
 void readPMS(){
-  //Serial.println("Waking up, wait 30 seconds for stable readings...");
+  Serial.println("Waking up, wait 30 seconds for stable readings...");
   
   Serial.println("Send read request...");
   pms.requestRead();
   delay(30000);
 
-  //Serial.println("Wait max. 1 second for read...");
+  Serial.println("Wait max. 1 second for read...");
   if (pms.readUntil(data))
   {
          Serial.print("PM 1.0 (ug/m3): ");
@@ -32,7 +32,7 @@ void readPMS(){
   }
   else
   {
-    //Serial.println("did'nt worked");
+    Serial.println("did'nt worked");
     pms.sleep();
     delay(1000);
     pms.wakeUp();
